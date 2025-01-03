@@ -1,0 +1,34 @@
+.trendingTitle h1 {
+    font-size: 26px;
+}
+
+.trendingTitle p {
+    font-size: 14px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.BtnSize {
+    width: 100%;
+    border: none;
+    font-weight: bold;
+}
+
+.clearBtn {
+    background: #e4e4e7 !important;
+    color: black !important;
+}
+
+.submitBtn {
+    background: #ea580c !important;
+    color: #ffff !important;
+}
