@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      <Trending/>
+      <Trending />
     </>
   )
 }

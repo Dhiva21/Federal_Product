@@ -2,7 +2,7 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
+ 
 export const TrendingBtn = ({ onSubmit, onClear }) => {
   return (
     <>
@@ -12,7 +12,7 @@ export const TrendingBtn = ({ onSubmit, onClear }) => {
             <Button
               variant="primary"
               className='clearBtn BtnSize'
-              onClick={onClear} // Trigger clear action
+              onClick={onClear} 
             >
               Clear
             </Button>
