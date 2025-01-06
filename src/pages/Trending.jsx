@@ -1,4 +1,5 @@
 import React from 'react'
+import { useState } from 'react';
 import {Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -6,9 +7,16 @@ import TrendingSelect from '../components/TrendingSelect';
 // import { TrendingBtn } from '../components/TrendingBtn';
 // import TrendingText from '../components/TrendingText';
 import '../css/Trending.css'
+import IndiaMap from '../components/IndiaMap';
 
 
 export const Trending = () => {
+    const [selectedState, setSelectedState] = useState(null);
+
+  
+  const handleStateSelect = (state) => {
+    setSelectedState(state);
+  };
   return (
       <Container>
             <Row>
@@ -22,13 +30,18 @@ export const Trending = () => {
        <Row>
               <Col xs={12}>                               
                       <div>
-                          <TrendingSelect />
+                          <TrendingSelect selectedState={selectedState} />
                       </div>
               </Col>
-              {/* <Col xs={6}>
-                  <div>
-                      <TrendingText/>
-                  </div></Col> */}
+      
+      </Row>
+        <Row>
+              <Col xs={12}>                               
+                      <div>
+                         <IndiaMap onStateSelect={handleStateSelect} />
+                      </div>
+              </Col>
+      
       </Row>
     </Container>
   )

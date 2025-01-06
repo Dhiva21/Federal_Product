@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
-import { TrendingBtn } from './TrendingBtn'; 
-import TrendingText from './TrendingText'; 
+import { TrendingBtn } from './TrendingBtn';
+import TrendingText from './TrendingText';
 
-function TrendingSelect() {
+function TrendingSelect({ selectedState }) {
   const [region, setRegion] = useState('India');
   const [trendingTopics, setTrendingTopics] = useState([]);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  // Sync selectedState with region on component mount or when selectedState changes
+  useEffect(() => {
+    if (selectedState) {
+      setRegion(selectedState);
+      fetchTrending(selectedState); // Fetch data when selectedState is updated
+    }
+  }, [selectedState]);
 
   const map_data = {
     "India": "IN",
@@ -47,10 +55,10 @@ function TrendingSelect() {
     "Sikkim": "IN-SK"
   };
 
-  const fetchTrending = async () => {
+  const fetchTrending = async (regionToFetch = region) => {
     setLoading(true);
     try {
-      const regionCode = map_data[region];
+      const regionCode = map_data[regionToFetch];
       if (!regionCode) {
         console.error('No region code found for the selected region');
         return;
@@ -75,9 +83,10 @@ function TrendingSelect() {
     setLoading(false);
   };
 
-  const handleSubmit = () => {
-    setSubmitted(true);
-    fetchTrending();
+  const handleRegionChange = (e) => {
+    const newRegion = e.target.value;
+    setRegion(newRegion);
+    fetchTrending(newRegion); // Fetch data on dropdown change
   };
 
   const handleClear = () => {
@@ -86,38 +95,37 @@ function TrendingSelect() {
   };
 
   return (
-      <>
-            <Row>
-              <Col xs={6}>                               
-                      <div>
-                          <Card className='p-3'>
-        <Form.Label htmlFor="state">Select State/Region</Form.Label>
-        <Form.Select
-          aria-label="Default select example"
-          id='state'
-          onChange={(e) => setRegion(e.target.value)}
-          value={region}
-        >
-          {Object.keys(map_data).sort().map((state) => (
-            <option key={state} value={state}>
-              {state}
-            </option>
-          ))}
-        </Form.Select>
-      </Card>
+    <>
+      <Row>
+        <Col xs={6}>
+          <div>
+            <Card className="p-3">
+              <Form.Label htmlFor="state">Select State/Region</Form.Label>
+              <Form.Select
+                aria-label="Default select example"
+                id="state"
+                onChange={handleRegionChange} // Call handleRegionChange on selection change
+                value={region} // Use region state as value
+              >
+                {Object.keys(map_data)
+                  .sort()
+                  .map((state) => (
+                    <option key={state} value={state}>
+                      {state}
+                    </option>
+                  ))}
+              </Form.Select>
+            </Card>
 
-      <TrendingBtn onSubmit={handleSubmit} onClear={handleClear} />
-                      </div>
-              </Col>
-              <Col xs={6}>
-                  <div>          
-                 <TrendingText topics={submitted && trendingTopics.length > 0 ? trendingTopics : []} loading={loading} />
-
-                  </div></Col>
+            <TrendingBtn onClear={handleClear} />
+          </div>
+        </Col>
+        <Col xs={6}>
+          <div>
+            <TrendingText topics={trendingTopics} loading={loading} />
+          </div>
+        </Col>
       </Row>
-     
-
-     
     </>
   );
 }
