@@ -1,14 +1,13 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import * as d3 from 'd3';
+import '../css/IndiaMap.css';
 
-const IndiaMap = ({ onStateSelect }) => {
+const IndiaMap = ({ onStateSelect ,region,setRegion }) => {
   const svgRef = useRef(null);
   const [selectedState, setSelectedState] = useState(null);  
   
-    
-  console.log(selectedState)
-
-
+ 
+  
 
     
     
@@ -17,18 +16,16 @@ const IndiaMap = ({ onStateSelect }) => {
     return async () => {
       try {
         if (!svgRef.current) return;
-
-        // Fetch and wait for the GeoJSON data
         const response = await fetch('/map/india.json');
         // URL= https://raw.githubusercontent.com/Subhash9325/GeoJson-Data-of-Indian-States/refs/heads/master/Indian_States
         const geoData = await response.json();
 
         // Setup D3
-        const width = 800;
-        const height = 600;
+        const width = 100;
+        const height = 350;
 
         const svg = d3.select(svgRef.current)
-          .attr('width', width)
+          .attr('width', '100%')
           .attr('height', height);
 
         // Clear any existing content
@@ -36,8 +33,8 @@ const IndiaMap = ({ onStateSelect }) => {
 
         // Create projection
         const projection = d3.geoMercator()
-          .center([78.9629, 22.5937]) // Center of India
-          .scale(1000)
+          .center([60.9629, 20.5937]) // Center of India
+          .scale(500)
           .translate([width / 2, height / 2]);
 
         // Create path generator
@@ -70,27 +67,26 @@ const IndiaMap = ({ onStateSelect }) => {
           .style('stroke-width', '0.5')
           .style('cursor', 'pointer')
           .on('mouseover', function(event, d) {
-            // Change color only if the state is not selected
-            if (d.properties.NAME_1 !== selectedState) {
+            if (d.properties.name !== selectedState) {
               d3.select(this).style('fill', '#4299e1');
             }
 
-            // Show tooltip
+     
             tooltip
               .style('visibility', 'visible')
-              .text(d.properties.NAME_1);
+              .text(d.properties.name);
 
-            // Calculate mouse position relative to the SVG container
+           
             const [x, y] = d3.pointer(event);
 
             // Set tooltip position
             tooltip
-              .style('left', `${x + 10}px`) // Adjust as needed for offset
-              .style('top', `${y - 25}px`); // Adjust for vertical alignment
+              .style('left', `${x + 10}px`)
+              .style('top', `${y - 25}px`); 
           })
           .on('mouseout', function(event, d) {
             // Reset color only if the state is not selected
-            if (d.properties.NAME_1 !== selectedState) {
+            if (d.properties.name !== selectedState) {
               d3.select(this).style('fill', '#cbd5e0');
             }
 
@@ -98,25 +94,28 @@ const IndiaMap = ({ onStateSelect }) => {
             tooltip.style('visibility', 'hidden');
           })
           .on('click', function(event, d) {
-            const clickedState = d.properties.NAME_1;
-            if (clickedState === selectedState) {
+            const clickedState = d.properties.name;
+            if (clickedState === selectedState || clickedState === region ) {
              onStateSelect(null);
               setSelectedState(null);
+              setRegion(null)
             } else {
               // Otherwise, update the selected state
                 setSelectedState(clickedState);
-                 onStateSelect(clickedState);
+              onStateSelect(clickedState);
+              setRegion(clickedState)
+              console.log(setRegion(clickedState))
             }
 
-            // Change the color of the clicked state
-            d3.select(this).style('fill', '#ff6347');
+          
+            d3.select(this).style('fill', '#84181a');
             console.log('Selected state:', clickedState);
           });
 
         // After map is drawn, ensure selected state keeps the color
         g.selectAll('path')
           .style('fill', function(d) {
-            return d.properties.NAME_1 === selectedState ? '#ff6347' : '#cbd5e0';
+            return d.properties.name === selectedState ? '#84181a' : '#cbd5e0';
           });
 
       } catch (error) {
@@ -129,13 +128,19 @@ const IndiaMap = ({ onStateSelect }) => {
     renderMap(); 
   }, [renderMap]);
 
+   useEffect(() => {
+    if (region) {
+      setSelectedState(region); 
+    }
+  }, [region]);
+
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <div className="p-4">
+      <div className="mapBoxShadow">
         <svg 
           ref={svgRef}
           className="w-full h-auto"
-          style={{ backgroundColor: '#f0f9ff' }}
+          style={{ backgroundColor: '#ddddde3' }}
         />
       </div>
     </div>
