@@ -7,16 +7,14 @@ import TrendingSelect from '../components/TrendingSelect';
 // import { TrendingBtn } from '../components/TrendingBtn';
 // import TrendingText from '../components/TrendingText';
 import '../css/Trending.css'
-import IndiaMap from '../components/IndiaMap';
+
 
 
 export const Trending = () => {
     const [selectedState, setSelectedState] = useState(null);
-
+    const [region, setRegion] = useState('India');
   
-  const handleStateSelect = (state) => {
-    setSelectedState(state);
-  };
+
   return (
       <Container>
             <Row>
@@ -30,19 +28,19 @@ export const Trending = () => {
        <Row>
               <Col xs={12}>                               
                       <div>
-                          <TrendingSelect selectedState={selectedState} />
+                          <TrendingSelect region={region} setRegion={setRegion} selectedState={selectedState} setSelectedState={setSelectedState} />
                       </div>
               </Col>
       
       </Row>
-        <Row>
+        {/* <Row>
               <Col xs={12}>                               
                       <div>
                          <IndiaMap onStateSelect={handleStateSelect} />
                       </div>
               </Col>
       
-      </Row>
+      </Row> */}
     </Container>
   )
 }

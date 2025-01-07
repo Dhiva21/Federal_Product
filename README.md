@@ -11,6 +11,7 @@ Front end
 1. npm i vite.js
 2. npm install react-bootstrap
 3. npm install axios
+4. npm i d3
 
 //Backend 
 1. npm init -y

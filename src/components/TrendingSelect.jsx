@@ -4,15 +4,26 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
-import { TrendingBtn } from './TrendingBtn';
+// import { TrendingBtn } from './TrendingBtn';
 import TrendingText from './TrendingText';
+import IndiaMap from '../components/IndiaMap';
+import '../css/Trending.css';
 
-function TrendingSelect({ selectedState }) {
-  const [region, setRegion] = useState('India');
+
+function TrendingSelect({ selectedState,setSelectedState,region , setRegion }) {
+  // const [region, setRegion] = useState('India');
   const [trendingTopics, setTrendingTopics] = useState([]);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [stateChange, setStateChange]= useState(null)
 
+
+
+
+  const handleStateSelect = (state) => {
+    setSelectedState(state);
+    setRegion(state)
+  };
   // Sync selectedState with region on component mount or when selectedState changes
   useEffect(() => {
     if (selectedState) {
@@ -39,13 +50,15 @@ function TrendingSelect({ selectedState }) {
     "Bihar": "IN-BR",
     "Madhya Pradesh": "IN-MP",
     "Chhattisgarh": "IN-CT",
-    "Odisha": "IN-OR",
+    "Orissa": "IN-OR",
     "Assam": "IN-AS",
     "Jharkhand": "IN-JH",
     "Himachal Pradesh": "IN-HP",
     "Uttarakhand": "IN-UT",
+     "Uttaranchal": "IN-UT",
     "Goa": "IN-GA",
     "Jammu and Kashmir": "IN-JK",
+    "Ladakh": "IN-JK",
     "Tripura": "IN-TR",
     "Meghalaya": "IN-ML",
     "Manipur": "IN-MN",
@@ -87,25 +100,26 @@ function TrendingSelect({ selectedState }) {
     const newRegion = e.target.value;
     setRegion(newRegion);
     fetchTrending(newRegion); // Fetch data on dropdown change
+     
   };
-
-  const handleClear = () => {
-    setSubmitted(false);
-    setTrendingTopics([]);
-  };
+ console.log(region);
+  // const handleClear = () => {
+  //   setSubmitted(false);
+  //   setTrendingTopics([]);
+  // };
 
   return (
     <>
       <Row>
         <Col xs={6}>
           <div>
-            <Card className="p-3">
+            <Card className="p-3 trendingBox border-0">
               <Form.Label htmlFor="state">Select State/Region</Form.Label>
               <Form.Select
                 aria-label="Default select example"
                 id="state"
-                onChange={handleRegionChange} // Call handleRegionChange on selection change
-                value={region} // Use region state as value
+                onChange={handleRegionChange} 
+                value={region} 
               >
                 {Object.keys(map_data)
                   .sort()
@@ -117,8 +131,17 @@ function TrendingSelect({ selectedState }) {
               </Form.Select>
             </Card>
 
-            <TrendingBtn onClear={handleClear} />
+            {/* <TrendingBtn onClear={handleClear} /> */}
           </div>
+
+
+          <Row>
+             <Col xs={12}>                               
+                                  <div>
+                                     <IndiaMap region={region}  setRegion={setRegion} onStateSelect={handleStateSelect} />
+                                  </div>
+                          </Col>
+          </Row>
         </Col>
         <Col xs={6}>
           <div>
