@@ -3,12 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
+"scripts": {
+ "start:backend": "node backend/server.js",
+  "start:frontend": "vite",
+  "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+  "dev": "vite",
+  "build": "vite build",
+  "lint": "eslint .",
+  "preview": "vite preview"
+},
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "axios": "^1.7.9",
